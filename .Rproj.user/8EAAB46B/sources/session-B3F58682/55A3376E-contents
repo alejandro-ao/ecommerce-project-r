@@ -62,4 +62,33 @@ ggplot(data, aes(x=Length.of.Membership)) +
     fill="orange",
   )
 
+# ---------------------------------------------------------------------------
+# FITTING A LINEAR MODEL
+# ---------------------------------------------------------------------------
+
+attach(data)
+
+lm.fit1 <- lm(Yearly.Amount.Spent~Length.of.Membership)
+
+summary(lm.fit1)
+# --> p value is below significance level, so the variable Length of 
+#     membership is significant.
+# --> beta_1 is 64.219, which means that an increase in the variable value
+#     causes an increase in the target variable.
+
+plot(Yearly.Amount.Spent~Length.of.Membership)
+abline(lm.fit1, col="red")
+
+# ---------------------------------------------------------------------------
+# RESIDUALS ANALYSIS
+# ---------------------------------------------------------------------------
+
+qqnorm(residuals(lm.fit1))
+qqline(residuals(lm.fit1), col="red")
+
+shapiro.test(residuals(lm.fit1))
+# --> the p value is > 0.05 so Ho cannot be rejected. The residuals 
+#     distribution is normal.
+# --> normality of residuals is an assumption of the linear model.
+#     this means that the chosen model works correctly.
 
