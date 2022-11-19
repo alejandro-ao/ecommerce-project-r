@@ -92,3 +92,81 @@ shapiro.test(residuals(lm.fit1))
 # --> normality of residuals is an assumption of the linear model.
 #     this means that the chosen model works correctly.
 
+# ---------------------------------------------------------------------------
+# EVALUATE THE QUALITY OF THE MODEL
+# ---------------------------------------------------------------------------
+
+# create a random training and a testing set
+set.seed(1)
+row.number <- sample(1:nrow(data), 0.8*nrow(data))
+
+train <- data[row.number,]
+test <- data[-row.number,]
+
+# estimate the linear fit with the training set
+lm.fit0.8 <- lm(Yearly.Amount.Spent~Length.of.Membership, data=train)
+summary(lm.fit0.8)
+
+# predict on testing set
+prediction0.8 <- predict(lm.fit0.8, newdata = test)
+err0.8 <- prediction0.8 - test$Yearly.Amount.Spent
+rmse <- sqrt(mean(err0.8^2))
+mape <- mean(abs(err0.8/test$Yearly.Amount.Spent))
+
+c(RMSE=rmse,mape=mape,R2=summary(lm.fit0.8)$r.squared) # to print the 3 parameters
+
+# ---------------------------------------------------------------------------
+# MULTIPLE REGRESSION
+# ---------------------------------------------------------------------------
+attach(data)
+lm.fit <- lm(Yearly.Amount.Spent~Avg..Session.Length +
+                                    Time.on.App + 
+                                    Time.on.Website +
+                                    Length.of.Membership)
+
+summary(lm.fit)
+
+# --------------
+# findings :
+# 3 of the 4 variables studied seem to have an positive impact on the
+# response variable. the most important remains length of membership, with 
+# a coefficient 1.5 and 2.4 higher than Time on App and Avg Session Length 
+# respectively. 
+# Time on website seems to have little impact in the response. 
+
+# ---------------------------------------------------------------------------
+# EVALUATE THE MULTIPLE REGRESSION MODEL
+# ---------------------------------------------------------------------------
+
+# create a random training and a testing set
+set.seed(1)
+row.number <- sample(1:nrow(data), 0.8*nrow(data))
+
+train <- data[row.number,]
+test <- data[-row.number,]
+
+# estimate the linear fit with the training set
+multi.lm.fit0.8 <- lm(Yearly.Amount.Spent~Avg..Session.Length +
+                        Time.on.App + 
+                        Time.on.Website +
+                        Length.of.Membership, 
+                      data=train)
+summary(multi.lm.fit0.8)
+
+# predict on testing set
+prediction.multi0.8 <- predict(multi.lm.fit0.8, newdata = test)
+err0.8 <- prediction.multi0.8 - test$Yearly.Amount.Spent
+rmse <- sqrt(mean(err0.8^2))
+mape <- mean(abs(err0.8/test$Yearly.Amount.Spent))
+
+c(RMSE=rmse,mape=mape,R2=summary(lm.fit0.8)$r.squared) # to print the 3 parameters
+
+# --------
+# findings
+# by using a multiple linear model, we have created a much more accurate
+# predictor of the response variable. R2 went from 0.65 to 0.98
+# and the RSE went from 47.14 to 9.97 dollars.
+
+
+
+
