@@ -9,7 +9,6 @@ summary(data)
 # ---------------------------------------------------------------------------
 # CREATE PLOTS AND SEARCH FOR CORRELATIONS
 # ---------------------------------------------------------------------------
-
 library(ggplot2)
 
 # Is there a correlation between Time on Website & Yearly Amount Spent?
@@ -42,4 +41,25 @@ pairs(data[c("Avg..Session.Length",
                  "Yearly spent"),
       main = "Pairplot of variables")
 
-# pairplot of all continuous variables
+# ---------------------------------------------------------------------------
+# EXPLORING THE SELECTED VARIABLES
+# ---------------------------------------------------------------------------
+
+# is the variable normally distributed?
+hist(data$Length.of.Membership)
+# with ggplot
+ggplot(data, aes(x=Length.of.Membership)) + 
+  geom_histogram(
+    color= "white", 
+    fill="orange",
+    binwidth = 0.5)
+
+# check distribution with boxplot
+boxplot(data$Length.of.Membership)
+# with ggplot
+ggplot(data, aes(x=Length.of.Membership)) + 
+  geom_boxplot(
+    fill="orange",
+  )
+
+
